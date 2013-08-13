@@ -194,6 +194,7 @@ class Chef
           [:INT, :TERM].each {|s| trap(s, "EXIT") }
           client_solo = Chef::Config[:solo] ? "chef-solo" : "chef-client"
           $0 = "#{client_solo} worker: ppid=#{Process.ppid};start=#{Time.new.strftime("%R:%S")};"
+          Chef::Daemon.forked_child = true
           begin
             Chef::Log.debug "Forked instance now converging"
             do_run

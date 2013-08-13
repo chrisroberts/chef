@@ -24,7 +24,8 @@ class Chef
   class Daemon
     class << self
       attr_accessor :name
-
+      attr_accessor :forked_child
+      
       # Daemonize the current process, managing pidfiles and process uid/gid
       #
       # === Parameters
@@ -46,7 +47,7 @@ class Chef
             $stdout.reopen("/dev/null", "a")
             $stderr.reopen($stdout)
             save_pid_file
-            at_exit { remove_pid_file }
+            at_exit { remove_pid_file unless forked_child }
           rescue NotImplementedError => e
             Chef::Application.fatal!("There is no fork: #{e.message}")
           end
